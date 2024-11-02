@@ -1,0 +1,186 @@
+###(INIT 시작)
+# DB 세팅
+DROP DATABASE IF EXISTS `24_09_07_Exam_ssa`;
+CREATE DATABASE `24_09_07_Exam_ssa`;
+USE `24_09_07_Exam_ssa`;
+
+# 게시글 테이블 생성
+CREATE TABLE article(
+      id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      regDate DATETIME NOT NULL,
+      updateDate DATETIME NOT NULL,
+      title CHAR(100) NOT NULL,
+      `body` TEXT NOT NULL
+);
+
+
+## 게시글 테스트 데이터 생성
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목1',
+`body` = '내용1';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목2',
+`body` = '내용2';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목3',
+`body` = '내용3';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = '제목4',
+`body` = '내용4';
+
+
+
+# 게시판(board) 테이블 생성
+CREATE TABLE board (
+      id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+      regDate DATETIME NOT NULL,
+      updateDate DATETIME NOT NULL,
+      `code` CHAR(50) NOT NULL UNIQUE COMMENT 'notice(공지사항) free(자유) QnA(질의응답) ...',
+      `name` CHAR(20) NOT NULL UNIQUE COMMENT '게시판 이름',
+      delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '삭제 여부 (0=삭제 전, 1=삭제 후)',
+      delDate DATETIME COMMENT '삭제 날짜'
+);
+
+## 게시판(board) 테스트 데이터 생성
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'NOTICE',
+`name` = '공지사항';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'FREE',
+`name` = '자유';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'QnA',
+`name` = '질의응답';
+
+ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER updateDate;
+
+UPDATE article
+SET boardId = 1
+WHERE id IN (1,2);
+
+UPDATE article
+SET boardId = 2
+WHERE id = 3;
+
+UPDATE article
+SET boardId = 3
+WHERE id = 4;
+
+##faq 테이블 생성
+CREATE TABLE faq (
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL
+);
+
+## 질의응답(faq) 테스트 데이터 생성
+INSERT INTO faq (question, answer) VALUES ('오늘의 날씨를 확인하려면 어떻게 해야 하나요?', '메인페이지에서 버튼을 누르면 해당 도시를 입력하면 현재 날씨를 확인할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('특정 도시의 일주일 날씨를 볼 수 있나요?', '날씨 페이지에서 도시 검색 후 "일주일 예보" 탭을 선택하면 해당 도시의 7일 예보를 볼 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('섭씨와 화씨 단위를 변경할 수 있나요?', '날씨 페이지에서 설정 메뉴를 통해 섭씨와 화씨 단위를 변경할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('해외 도시도 검색이 가능한가요?', '네, 국내뿐만 아니라 전 세계 도시의 날씨 정보를 검색할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('날씨 알림을 설정할 수 있나요?', '마이페이지의 알림 설정에서 특정 도시의 날씨 변동 알림을 받을 수 있도록 설정할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('현재 위치 기반 날씨는 어떻게 확인하나요?', '위치 접근 권한을 허용하면, 현재 위치를 기반으로 자동으로 날씨 정보를 제공합니다.');
+INSERT INTO faq (question, answer) VALUES ('비가 오면 알림을 받을 수 있나요?', '알림 설정에서 비 예보 알림을 활성화하면, 비가 올 것으로 예상될 때 알림을 받습니다.');
+INSERT INTO faq (question, answer) VALUES ('실시간 날씨 정보는 얼마나 자주 업데이트되나요?', '날씨 데이터는 10분 간격으로 업데이트되어 최신 정보를 제공합니다.');
+INSERT INTO faq (question, answer) VALUES ('강수량과 강설량도 확인할 수 있나요?', '네, 현재 강수량과 강설량 정보도 날씨 페이지에서 확인할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('대기의 미세먼지와 공기질 정보를 확인할 수 있나요?', '날씨 검색 후, "공기질" 탭에서 미세먼지와 대기 오염 관련 정보를 확인할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('날씨 예보는 얼마나 정확한가요?', '우리 서비스는 신뢰할 수 있는 날씨 API 제공업체의 데이터를 사용하며, 최신 데이터에 기반한 예보를 제공합니다.');
+INSERT INTO faq (question, answer) VALUES ('날씨 아이콘의 의미가 궁금해요.', '각 날씨 상태에 따라 아이콘이 표시되며, 햇빛, 구름, 비, 눈 등 아이콘으로 현재 날씨 상태를 나타냅니다.');
+INSERT INTO faq (question, answer) VALUES ('도시 검색 시 오류가 발생하는 경우 어떻게 하나요?', '도시 이름이 정확한지 확인하고 다시 시도해 주세요. 문제가 지속되면 고객 지원팀에 문의해 주세요.');
+INSERT INTO faq (question, answer) VALUES ('도시별로 일출과 일몰 시간을 확인할 수 있나요?', '날씨 페이지에서 검색 후 일출과 일몰 시간을 함께 확인할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('체감 기온은 무엇인가요?', '체감 기온은 바람과 습도 등을 고려한 실제로 느끼는 온도로, 날씨 페이지에서 확인할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('도시별로 최고/최저 기온을 확인할 수 있나요?', '날씨 검색 결과에서 해당 도시의 최고 및 최저 기온을 확인할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('날씨 정보는 어디서 제공되나요?', '우리 서비스는 OpenWeather API를 통해 날씨 데이터를 제공합니다.');
+INSERT INTO faq (question, answer) VALUES ('특정 날짜의 과거 날씨 정보를 볼 수 있나요?', '현재는 실시간 날씨와 7일 예보만 제공되며, 과거 날씨 정보 제공 기능은 준비 중입니다.');
+INSERT INTO faq (question, answer) VALUES ('특정 지역에 대한 알림을 설정할 수 있나요?', '마이페이지에서 관심 도시를 등록하고 해당 지역의 기상 특보 알림을 설정할 수 있습니다.');
+INSERT INTO faq (question, answer) VALUES ('강한 바람이나 폭우 예보 시 알림을 받을 수 있나요?', '알림 설정에서 날씨 특보 알림을 활성화하면, 강풍, 폭우 등의 기상 특보가 있을 때 알림을 받을 수 있습니다.');
+
+###(INIT 끝)
+##########################################
+SELECT *
+FROM article
+ORDER BY id DESC;
+
+SELECT * FROM board;
+
+SELECT * FROM faq;
+###############################################################################
+
+
+
+## 게시글 테스트 데이터 대량 생성
+INSERT INTO article
+(
+    regDate, updateDate,boardId, title, `body`
+)
+SELECT NOW(), NOW(), FLOOR(RAND() * 3) + 1, CONCAT('제목__', RAND()), CONCAT('내용__', RAND())
+FROM article;
+
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = CONCAT('제목__', RAND()),
+`body` = CONCAT('내용__', RAND());
+
+
+SELECT *
+FROM article
+WHERE boardId = 1
+ORDER BY id DESC;
+
+SELECT *
+FROM article
+WHERE boardId = 2
+ORDER BY id DESC;
+
+SELECT *
+FROM article
+WHERE boardId = 3
+ORDER BY id DESC;
+
+
+
+SELECT *
+FROM article
+WHERE boardId = 1 AND title LIKE '%123%'
+ORDER BY id DESC;
+
+
+SELECT *
+FROM article
+WHERE boardId = 1 AND title LIKE '%123%' OR `body` LIKE '%123%'
+ORDER BY id DESC;
+
+SELECT COUNT(*)
+FROM article AS A
+WHERE A.boardId = 1 
+ORDER BY A.id DESC;
+
+
+
+SELECT hitCount
+FROM article WHERE id = 3
+
+
+
+
